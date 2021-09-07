@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_board/flutter_board.dart';
+import 'package:flutter_boarding/flutter_boarding.dart';
 
 void main() {
   runApp(MyApp());

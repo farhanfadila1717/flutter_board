@@ -1,7 +1,8 @@
-name: flutter_board
+name: flutter_boarding
 description: A new Flutter package.
 version: 0.0.1
-homepage:
+homepage: https://github.com/farhanfadila1717/flutter_board
+maintener: Farhan Fadila (@farhanfadila1717)
 
 environment:
   sdk: ">=2.12.0 <3.0.0"
