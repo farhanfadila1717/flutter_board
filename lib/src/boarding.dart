@@ -6,11 +6,14 @@ part 'boarding_parent_data.dart';
 part 'boarding_widget.dart';
 part 'boarding_item.dart';
 part 'boarding_content.dart';
+part 'boarding_theme.dart';
 
 class Boarding extends StatefulWidget {
-  const Boarding({Key? key, required this.content}) : super(key: key);
+  const Boarding({Key? key, required this.content, required this.theme})
+      : super(key: key);
 
   final BoardingContent content;
+  final BoardingTheme theme;
 
   @override
   _BoardingState createState() => _BoardingState();
@@ -29,18 +32,22 @@ class _BoardingState extends State<Boarding>
     super.initState();
     _overlayState = Overlay.of(context);
     _animationController = AnimationController(
-        vsync: this,
-        duration: const Duration(milliseconds: 300),
-        reverseDuration: const Duration(milliseconds: 200));
+      vsync: this,
+      duration: widget.theme.animationDuration,
+      reverseDuration: widget.theme.reverseAnimationDuration,
+    );
 
     _animation = CurvedAnimation(
       parent: _animationController,
-      curve: Curves.easeIn,
-      reverseCurve: Curves.easeOut,
+      curve: widget.theme.curve,
+      reverseCurve: widget.theme.reverseCurve ?? widget.theme.curve,
     );
-    Future.delayed(Duration(milliseconds: 100), () {
-      showEntry();
-    });
+    Future.delayed(
+      Duration(milliseconds: 10),
+      () {
+        showEntry();
+      },
+    );
   }
 
   void showEntry() {
@@ -57,20 +64,24 @@ class _BoardingState extends State<Boarding>
             insetPadding: EdgeInsets.zero,
             backgroundColor: Colors.transparent,
             child: AnimatedBuilder(
-                animation: _animationController,
-                builder: (context, snapshot) {
-                  return FadeTransition(
-                    opacity: _animation,
-                    child: boardingWidget
-                      ..onTap = () {
-                        checkEntry();
-                      }
-                      ..buttonText = _currentIndex < widget.content.items.length
-                          ? "Got it"
-                          : "Finish"
-                      ..selectedIndex = _currentIndex - 1,
-                  );
-                }),
+              animation: _animationController,
+              builder: (context, snapshot) {
+                final BoardingTheme _theme =
+                    boardingWidget.theme ?? widget.theme;
+                return FadeTransition(
+                  opacity: _animation,
+                  child: boardingWidget
+                    ..onTap = () {
+                      checkEntry();
+                    }
+                    ..buttonText = _currentIndex < widget.content.items.length
+                        ? _theme.nextLabel
+                        : _theme.finishLabel
+                    ..selectedIndex = _currentIndex - 1
+                    ..theme = _theme,
+                );
+              },
+            ),
           ),
         );
       },

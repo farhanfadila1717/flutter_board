@@ -5,12 +5,14 @@ class BackgorundPainter extends CustomPainter {
   final bool isTop;
   final double arrowXPosition;
   final Size layoutSize;
+  final double borderRadius;
 
   const BackgorundPainter({
     required this.layoutSize,
     this.color = Colors.black54,
     this.isTop = false,
     this.arrowXPosition = 50,
+    this.borderRadius = 5,
   });
 
   @override
@@ -34,7 +36,7 @@ class BackgorundPainter extends CustomPainter {
     RRect fullRect = RRect.fromRectAndRadius(
       Rect.fromCenter(
           center: Offset(width / 2, height / 2), width: width, height: height),
-      Radius.circular(5),
+      Radius.circular(borderRadius),
     );
 
     canvas.drawRRect(fullRect, paint);

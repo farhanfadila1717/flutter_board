@@ -41,6 +41,7 @@ class BoardingController extends ValueNotifier<bool> {
       builder: (BuildContext context) {
         return Boarding(
           content: _content,
+          theme: content.theme,
         );
       },
     );
