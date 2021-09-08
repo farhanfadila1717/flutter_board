@@ -1,5 +1,6 @@
-## [![cover][]][cover]
-
+## [![cover][]][cover] <br>
+A Simply create introduction board in Flutter, create [Boading] based on parent key.
+---
 ```dart
 _boardingController.showBoarding(
   context,
