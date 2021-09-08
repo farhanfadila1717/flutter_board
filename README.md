@@ -1,6 +1,10 @@
-## [![cover][]][cover] <br>
-A Simply create introduction board in Flutter, create [Boading] based on parent key.
+## [![cover][]][cover]
+
+[![flutter][]][web flutter] [![badge paypal][]][paypal account] [![badge linktree][]][linktree account] <br>
+<p> A Simply create introduction board in Flutter, create [Boading] based on parent key. </p>
 ---
+## Example
+
 ```dart
 _boardingController.showBoarding(
   context,
@@ -141,3 +145,5 @@ _boardingController.showBoarding(
 [linktree account]: https://linktr.ee/farhanfadila
 [badge paypal]: https://img.shields.io/badge/Donate-PayPal-00457C?logo=paypal
 [paypal account]: https://www.paypal.me/farhanfadila1717
+[flutter]: https://img.shields.io/badge/Platform-Flutter-02569B?logo=flutter
+[web flutter]: https://flutter.dev
