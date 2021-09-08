@@ -1,7 +1,7 @@
 ## [![cover][]][cover]
 
 [![flutter][]][web flutter] [![badge paypal][]][paypal account] [![badge linktree][]][linktree account] <br>
-<p> A Simply create introduction board in Flutter, create [Boading] based on parent key. </p>
+A Simply create introduction board in Flutter, create [Boading] based on parent key.
 ---
 ## Example
 
