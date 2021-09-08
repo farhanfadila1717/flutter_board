@@ -2,6 +2,6 @@
 
 * First release
 
-## 0.0.2
+## 0.0.2-dev.1
 
 * Add boarding theme
