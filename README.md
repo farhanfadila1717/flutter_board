@@ -2,7 +2,9 @@
 
 [![flutter][]][web flutter] [![badge paypal][]][paypal account] [![badge linktree][]][linktree account] <br>
 A Simply create introduction board in Flutter, create [Boading] based on parent key.
+
 ---
+
 ## Example
 
 ```dart
