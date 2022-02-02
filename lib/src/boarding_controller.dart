@@ -14,18 +14,20 @@ class BoardingController extends ValueNotifier<bool> {
 
     for (int i = 0; i < content.keys.length; i++) {
       if (content.keys[i].currentContext != null) {
-        RenderBox renderBox =
+        final RenderBox renderBox =
             content.keys[i].currentContext!.findRenderObject() as RenderBox;
 
-        Offset offset = renderBox.localToGlobal(Offset.zero);
-        double x = ((offset.dx + renderBox.size.width) - 24) -
+        final Offset offset = renderBox.localToGlobal(Offset.zero);
+        final double x = ((offset.dx + renderBox.size.width) - 24) -
             ((renderBox.size.width - 12) / 2);
+        final double y = offset.dy;
 
-        BoardingParentData data = BoardingParentData(
+        final BoardingParentData data = BoardingParentData(
           size: renderBox.size,
-          isTop: offset.dy < (size.height / 2),
+          isTop: y < (size.height / 2),
           x: x,
-          y: offset.dy,
+          y: y,
+          offset: offset,
         );
 
         _content.items[i]
@@ -34,16 +36,16 @@ class BoardingController extends ValueNotifier<bool> {
       }
     }
 
-    await showDialog(
-      context: context,
-      barrierColor: Colors.transparent,
-      barrierDismissible: false,
-      builder: (BuildContext context) {
-        return Boarding(
-          content: _content,
-          theme: content.theme,
-        );
-      },
+    Navigator.of(context).push(
+      PageRouteBuilder(
+        opaque: false,
+        pageBuilder: (context, _, __) {
+          return Boarding(
+            content: _content,
+            theme: _content.theme,
+          );
+        },
+      ),
     );
     value = false;
     notifyListeners();

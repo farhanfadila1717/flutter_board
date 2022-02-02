@@ -17,6 +17,7 @@ class BoardingTheme {
   final Duration reverseAnimationDuration;
   final Curve curve;
   final Curve? reverseCurve;
+  final Color barrierColor;
 
   const BoardingTheme({
     this.borderRadius = 10,
@@ -35,5 +36,6 @@ class BoardingTheme {
     this.reverseAnimationDuration = const Duration(milliseconds: 200),
     this.curve = Curves.easeIn,
     this.reverseCurve,
+    this.barrierColor = Colors.black26,
   });
 }

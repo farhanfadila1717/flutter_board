@@ -19,18 +19,25 @@ class BackgorundPainter extends CustomPainter {
   void paint(Canvas canvas, Size size) {
     final width = size.width;
     final height = size.height;
-    final polySize = 24;
-    final polyHalfSize = polySize / 2;
+    final _arrowXPosition = arrowXPosition < 18
+        ? arrowXPosition + 18
+        : arrowXPosition > (width - 18)
+            ? arrowXPosition - 18
+            : arrowXPosition;
+    const polySize = 24;
+
+    const polyHalfSize = polySize / 2;
     var paint = Paint()..color = color;
+
     var arrowTop = Path()
-      ..moveTo(arrowXPosition, -polyHalfSize)
-      ..lineTo(arrowXPosition - polyHalfSize, 0)
-      ..lineTo(arrowXPosition + polyHalfSize, 0)
+      ..moveTo(_arrowXPosition, -polyHalfSize)
+      ..lineTo(_arrowXPosition - polyHalfSize, 0)
+      ..lineTo(_arrowXPosition + polyHalfSize, 0)
       ..close();
     var arrowBottom = Path()
-      ..moveTo(arrowXPosition, height + polyHalfSize)
-      ..lineTo(arrowXPosition - polyHalfSize, height)
-      ..lineTo(arrowXPosition + polyHalfSize, height)
+      ..moveTo(_arrowXPosition, height + polyHalfSize)
+      ..lineTo(_arrowXPosition - polyHalfSize, height)
+      ..lineTo(_arrowXPosition + polyHalfSize, height)
       ..close();
 
     RRect fullRect = RRect.fromRectAndRadius(

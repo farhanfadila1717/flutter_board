@@ -3,11 +3,17 @@ part of 'boarding.dart';
 class BoardingParentData {
   final Size size;
   final bool isTop;
+  final Offset offset;
   final double x;
   final double y;
 
-  const BoardingParentData(
-      {this.size = Size.zero, this.isTop = false, this.x = 50, this.y = 50});
+  const BoardingParentData({
+    this.size = Size.zero,
+    this.isTop = false,
+    this.x = 50,
+    this.y = 50,
+    this.offset = Offset.zero,
+  });
 
   BoardingParentData copyWith(
           {Size? size, bool? isTop, double? x, double? y}) =>

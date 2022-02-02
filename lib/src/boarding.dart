@@ -7,6 +7,7 @@ part 'boarding_widget.dart';
 part 'boarding_item.dart';
 part 'boarding_content.dart';
 part 'boarding_theme.dart';
+part 'hightlight_painter.dart';
 
 class Boarding extends StatefulWidget {
   const Boarding({Key? key, required this.content, required this.theme})
@@ -21,86 +22,35 @@ class Boarding extends StatefulWidget {
 
 class _BoardingState extends State<Boarding>
     with SingleTickerProviderStateMixin {
-  late AnimationController _animationController;
-  late Animation<double> _animation;
-  late OverlayState? _overlayState;
-  late OverlayEntry _overlayEntry;
-  int _currentIndex = 0;
+  late final AnimationController controller;
+  late final Animation<double> progressAnimation;
+  Animatable opacityAnimation = CurveTween(
+      curve: const Interval(0.5, 1.0, curve: Curves.linearToEaseOut));
+  int currentIndex = 0;
 
   @override
   void initState() {
+    controller = AnimationController(
+        vsync: this, duration: const Duration(milliseconds: 700));
+    progressAnimation = Tween<double>(begin: 1.0, end: 0.0).animate(
+        CurvedAnimation(parent: controller, curve: Curves.fastOutSlowIn));
+    WidgetsBinding.instance!.addPostFrameCallback((timeStamp) {
+      controller.forward();
+    });
     super.initState();
-    _overlayState = Overlay.of(context);
-    _animationController = AnimationController(
-      vsync: this,
-      duration: widget.theme.animationDuration,
-      reverseDuration: widget.theme.reverseAnimationDuration,
-    );
-
-    _animation = CurvedAnimation(
-      parent: _animationController,
-      curve: widget.theme.curve,
-      reverseCurve: widget.theme.reverseCurve ?? widget.theme.curve,
-    );
-    Future.delayed(
-      Duration(milliseconds: 10),
-      () {
-        showEntry();
-      },
-    );
   }
 
-  void showEntry() {
-    final BoardingWidget boardingWidget = widget.content.items[_currentIndex];
-    final BoardingParentData data = boardingWidget.boardingParentData;
-
-    _overlayEntry = OverlayEntry(
-      builder: (BuildContext context) {
-        _animationController.forward();
-        return Positioned(
-          top: data.isTop ? (data.y + data.size.height / 2) + 30 : null,
-          bottom: data.isTop ? null : data.size.height + 30,
-          child: Dialog(
-            insetPadding: EdgeInsets.zero,
-            backgroundColor: Colors.transparent,
-            child: AnimatedBuilder(
-              animation: _animationController,
-              builder: (context, snapshot) {
-                final BoardingTheme _theme =
-                    boardingWidget.theme ?? widget.theme;
-                return FadeTransition(
-                  opacity: _animation,
-                  child: boardingWidget
-                    ..onTap = () {
-                      checkEntry();
-                    }
-                    ..buttonText = _currentIndex < widget.content.items.length
-                        ? _theme.nextLabel
-                        : _theme.finishLabel
-                    ..selectedIndex = _currentIndex - 1
-                    ..theme = _theme,
-                );
-              },
-            ),
-          ),
-        );
-      },
-    );
-
-    if (_overlayState != null) {
-      _overlayState!.insert(_overlayEntry);
-      _currentIndex++;
-    }
-  }
-
-  void checkEntry() async {
-    await _animationController.reverse();
-    _animationController.reset();
-    if (_currentIndex < widget.content.items.length) {
-      _overlayEntry.remove();
-      showEntry();
+  void check({bool previous = false}) {
+    if (previous) {
+      currentIndex--;
     } else {
-      _overlayEntry.remove();
+      currentIndex++;
+    }
+    if (currentIndex < widget.content.items.length) {
+      controller.reset();
+      controller.forward();
+      setState(() {});
+    } else {
       if (widget.content.onFinish != null) {
         widget.content.onFinish!();
       }
@@ -110,12 +60,80 @@ class _BoardingState extends State<Boarding>
 
   @override
   void dispose() {
-    _animationController.dispose();
+    controller.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox.shrink();
+    final BoardingWidget boardingWidget = widget.content.items[currentIndex];
+    final BoardingParentData data = boardingWidget.boardingParentData;
+
+    final Size size = MediaQuery.of(context).size;
+    final _theme = widget.theme;
+    return Scaffold(
+      backgroundColor: Colors.transparent,
+      body: SizedBox.expand(
+        child: Stack(
+          children: [
+            Positioned(
+                top: data.offset.dy - 5,
+                left: data.offset.dx - 5,
+                child: AnimatedBuilder(
+                  animation: controller,
+                  builder: (context, _) {
+                    return CustomPaint(
+                      painter: HightlightPainter(
+                        progress: progressAnimation.value,
+                        color: _theme.barrierColor,
+                        screenSize: size,
+                        hightlightBorderRadius:
+                            boardingWidget.hightlightBorderRadius,
+                        hightlightMargin: boardingWidget.hightlightMargin,
+                        hightlightShape: boardingWidget.hightlightShape,
+                      ),
+                      size: Size(data.size.width + 10, data.size.height + 10),
+                    );
+                  },
+                )),
+            Positioned(
+              top: data.isTop
+                  ? data.y +
+                      data.size.height +
+                      boardingWidget.hightlightMargin +
+                      5
+                  : null,
+              bottom: data.isTop
+                  ? null
+                  : (size.height -
+                      data.y +
+                      boardingWidget.hightlightMargin +
+                      5),
+              child: AnimatedBuilder(
+                animation: controller,
+                builder: (context, child) {
+                  return Opacity(
+                    opacity: opacityAnimation.evaluate(controller),
+                    child: child,
+                  );
+                },
+                child: boardingWidget
+                  ..onNext = () {
+                    check();
+                  }
+                  ..onPrevious = () {
+                    check(previous: true);
+                  }
+                  ..nextText = currentIndex + 1 < widget.content.items.length
+                      ? _theme.nextLabel
+                      : _theme.finishLabel
+                  ..selectedIndex = currentIndex
+                  ..theme = _theme,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 }

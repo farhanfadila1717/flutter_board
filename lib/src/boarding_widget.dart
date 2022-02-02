@@ -6,31 +6,41 @@ class BoardingWidget extends StatelessWidget {
     Key? key,
     required this.boardingItem,
     this.theme,
-    this.onTap,
+    this.onPrevious,
+    this.onNext,
     this.onClose,
     this.boardingParentData = const BoardingParentData(),
-    this.buttonText = "Got it",
+    this.previousText = "Back",
+    this.nextText = "Got it",
     this.leading = const SizedBox.shrink(),
     this.index = 0,
     this.selectedIndex = 0,
     this.childCount = 1,
+    this.hightlightBorderRadius = 5,
+    this.hightlightMargin = 5,
+    this.hightlightShape = BoxShape.rectangle,
   }) : super(key: key);
 
   final Widget leading;
   final List<Widget> boardingItem;
+  final double hightlightMargin;
+  final double hightlightBorderRadius;
+  final BoxShape hightlightShape;
   BoardingParentData boardingParentData;
   int selectedIndex;
   int index;
   int childCount;
-  VoidCallback? onTap;
+  VoidCallback? onPrevious;
+  VoidCallback? onNext;
   VoidCallback? onClose;
-  String buttonText;
+  String previousText;
+  String nextText;
   BoardingTheme? theme;
 
   @override
   Widget build(BuildContext context) {
     final Size size = MediaQuery.of(context).size;
-    final BoardingTheme _theme = theme ?? BoardingTheme();
+    final BoardingTheme _theme = theme ?? const BoardingTheme();
     return SizedBox(
       key: key,
       width: size.width,
@@ -52,9 +62,10 @@ class BoardingWidget extends StatelessWidget {
                 Row(
                   children: [
                     leading,
-                    Spacer(),
+                    const Spacer(),
                     GestureDetector(
                       onTap: () {
+                        onClose?.call();
                         Navigator.pop(context);
                       },
                       child: Icon(
@@ -70,6 +81,28 @@ class BoardingWidget extends StatelessWidget {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
+                    IgnorePointer(
+                      ignoring: selectedIndex == 0,
+                      child: SizedBox.fromSize(
+                        size: _theme.buttonSize,
+                        child: TextButton(
+                          onPressed: () {
+                            if (onPrevious != null) {
+                              onPrevious!();
+                            }
+                          },
+                          child: Text(
+                            previousText,
+                            style: TextStyle(
+                              color: selectedIndex == 0
+                                  ? _theme.color.withOpacity(.2)
+                                  : _theme.color,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
                     Visibility(
                       visible: _theme.withDot && childCount > 0,
                       child: Row(
@@ -108,12 +141,12 @@ class BoardingWidget extends StatelessWidget {
                       size: _theme.buttonSize,
                       child: TextButton(
                         onPressed: () {
-                          if (onTap != null) {
-                            onTap!();
+                          if (onNext != null) {
+                            onNext!();
                           }
                         },
                         child: Text(
-                          buttonText,
+                          nextText,
                           style: TextStyle(
                             color: _theme.backgroundColor,
                             fontWeight: FontWeight.w600,
