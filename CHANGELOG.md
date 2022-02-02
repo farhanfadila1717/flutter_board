@@ -1,4 +1,4 @@
-## 0.1.0
+## 0.1.0-dev.1
 * Add : Hightlight theme, Animation
 * New Example
 * refactor boarding
