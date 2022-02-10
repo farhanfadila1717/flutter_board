@@ -96,6 +96,16 @@ class _BoardingState extends State<Boarding>
                     );
                   },
                 )),
+            SizedBox.expand(
+              child: GestureDetector(
+                onTap: () {
+                  if (_theme.barrierDismissible) {
+                    Navigator.pop(context);
+                  }
+                },
+                child: const ColoredBox(color: Colors.transparent),
+              ),
+            ),
             Positioned(
               top: data.isTop
                   ? data.y +
@@ -127,8 +137,10 @@ class _BoardingState extends State<Boarding>
                   ..nextText = currentIndex + 1 < widget.content.items.length
                       ? _theme.nextLabel
                       : _theme.finishLabel
+                  ..previousText = _theme.previousLabel
                   ..selectedIndex = currentIndex
-                  ..theme = _theme,
+                  ..theme = _theme
+                  ..childCount = widget.content.items.length,
               ),
             ),
           ],

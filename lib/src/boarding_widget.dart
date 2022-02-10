@@ -19,10 +19,12 @@ class BoardingWidget extends StatelessWidget {
     this.hightlightBorderRadius = 5,
     this.hightlightMargin = 5,
     this.hightlightShape = BoxShape.rectangle,
+    this.withHightlight = true,
   }) : super(key: key);
 
   final Widget leading;
   final List<Widget> boardingItem;
+  final bool withHightlight;
   final double hightlightMargin;
   final double hightlightBorderRadius;
   final BoxShape hightlightShape;
@@ -68,11 +70,12 @@ class BoardingWidget extends StatelessWidget {
                         onClose?.call();
                         Navigator.pop(context);
                       },
-                      child: Icon(
-                        Icons.close,
-                        color: _theme.color,
-                        size: 20,
-                      ),
+                      child: _theme.closeIcon ??
+                          Icon(
+                            Icons.close_rounded,
+                            color: _theme.color,
+                            size: 20,
+                          ),
                     ),
                   ],
                 ),
@@ -81,30 +84,35 @@ class BoardingWidget extends StatelessWidget {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    IgnorePointer(
-                      ignoring: selectedIndex == 0,
-                      child: SizedBox.fromSize(
-                        size: _theme.buttonSize,
-                        child: TextButton(
-                          onPressed: () {
-                            if (onPrevious != null) {
-                              onPrevious!();
-                            }
-                          },
-                          child: Text(
-                            previousText,
-                            style: TextStyle(
-                              color: selectedIndex == 0
-                                  ? _theme.color.withOpacity(.2)
-                                  : _theme.color,
-                              fontWeight: FontWeight.w600,
+                    Visibility(
+                      visible: childCount > 1,
+                      child: IgnorePointer(
+                        ignoring: selectedIndex == 0,
+                        child: SizedBox.fromSize(
+                          size: _theme.buttonSize,
+                          child: TextButton(
+                            onPressed: () {
+                              if (onPrevious != null) {
+                                onPrevious!();
+                              }
+                            },
+                            child: Text(
+                              previousText,
+                              style: TextStyle(
+                                color: selectedIndex == 0
+                                    ? _theme.color.withOpacity(.2)
+                                    : _theme.color,
+                                fontWeight: FontWeight.w600,
+                              ),
                             ),
+                            style: _theme.previousButtonStyle ??
+                                const ButtonStyle(),
                           ),
                         ),
                       ),
                     ),
                     Visibility(
-                      visible: _theme.withDot && childCount > 0,
+                      visible: _theme.withDot && childCount > 1,
                       child: Row(
                         children: List.generate(
                           childCount,
@@ -152,7 +160,7 @@ class BoardingWidget extends StatelessWidget {
                             fontWeight: FontWeight.w600,
                           ),
                         ),
-                        style: _theme.buttonStyle ??
+                        style: _theme.nextButtonStyle ??
                             ButtonStyle(
                               backgroundColor:
                                   MaterialStateProperty.all(_theme.color),

@@ -8,9 +8,12 @@ class BoardingTheme {
   final Color backgroundColor;
   final String finishLabel;
   final String nextLabel;
+  final String previousLabel;
   final bool withDot;
+  final bool withPrevious;
   final Color? dotColor;
-  final ButtonStyle? buttonStyle;
+  final ButtonStyle? nextButtonStyle;
+  final ButtonStyle? previousButtonStyle;
   final EdgeInsets padding;
   final EdgeInsets margin;
   final Duration animationDuration;
@@ -18,6 +21,8 @@ class BoardingTheme {
   final Curve curve;
   final Curve? reverseCurve;
   final Color barrierColor;
+  final bool barrierDismissible;
+  final Widget? closeIcon;
 
   const BoardingTheme({
     this.borderRadius = 10,
@@ -25,8 +30,10 @@ class BoardingTheme {
     this.dotSize = const Size.square(8),
     this.color = Colors.white,
     this.backgroundColor = const Color(0xCC000000),
-    this.buttonStyle,
+    this.previousButtonStyle,
+    this.nextButtonStyle,
     this.dotColor = Colors.white,
+    this.previousLabel = "Back",
     this.finishLabel = "Finish",
     this.nextLabel = "Next",
     this.withDot = true,
@@ -37,5 +44,8 @@ class BoardingTheme {
     this.curve = Curves.easeIn,
     this.reverseCurve,
     this.barrierColor = Colors.black26,
+    this.barrierDismissible = false,
+    this.closeIcon,
+    this.withPrevious = true,
   });
 }
