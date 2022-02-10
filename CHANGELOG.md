@@ -1,3 +1,7 @@
+## 0.1.0-dev.2
+* Add: barrierDismissable
+* Fix: dot & back button
+
 ## 0.1.0-dev.1
 * Add : Hightlight theme, Animation
 * New Example
