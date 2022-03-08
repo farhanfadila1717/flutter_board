@@ -1,4 +1,5 @@
 ## 0.1.0-dev.3
+* Fix: onFinish Function
 
 ## 0.1.0-dev.2
 * Add: barrierDismissable
