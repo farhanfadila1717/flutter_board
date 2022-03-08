@@ -51,10 +51,10 @@ class _BoardingState extends State<Boarding>
       controller.forward();
       setState(() {});
     } else {
+      Navigator.pop(context);
       if (widget.content.onFinish != null) {
         widget.content.onFinish!();
       }
-      Navigator.pop(context);
     }
   }
 
